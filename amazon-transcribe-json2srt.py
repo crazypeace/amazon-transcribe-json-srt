@@ -1,7 +1,5 @@
-#!/usr/bin/env python3
-
 #convert Transcribe to srt
-def process(items):
+def process(items, between_words):
     i=1
     output=''
     isStart=False
@@ -27,7 +25,7 @@ def process(items):
             continue
             
         if (isStart and not isEnd and item.has_key('start_time')):
-            msg=msg+' '+item['alternatives'][0]['content']
+            msg=msg+between_words+item['alternatives'][0]['content']
 
         if (isStart and isEnd):
             hour=int(start_time/60/60)
@@ -39,7 +37,7 @@ def process(items):
             e_sec=int(end_time)-e_min*60-e_hour*60*60
             e_msec=int((end_time-sec)*1000)
             msg1='{}:{}:{},{} --> {}:{}:{},{}'.format(hour,min,sec,msec, e_hour,e_min,e_sec,e_msec)+'\n'
-            output=output+msg1+msg+' '+item['alternatives'][0]['content']+'\n\n'
+            output=output+msg1+msg+between_words+item['alternatives'][0]['content']+'\n\n'
             i=i+1
             isStart=False
             isEnd=False
@@ -48,18 +46,34 @@ def process(items):
     return output
 
 def main():
-	import sys
-	import json
-	import datetime
-	import codecs
+    import sys
+    import json
+    import datetime
+    import codecs
+    import argparse
 
-	filename=sys.argv[1]
-	print ("Filename: ", filename)
-	with codecs.open(filename+'.txt', 'w', 'utf-8') as w:
-		with codecs.open(filename, 'r', 'utf-8') as f:
-			data=json.loads(f.read())
-			output=process(data["results"]['items'])
-			w.write(output)
+    parser = argparse.ArgumentParser(description='convert Amazon Transcribe JSON file to SRT subtitle file.')
+    parser.add_argument("--space", action="store_true", 
+                    help="space between words")
+    parser.add_argument("JSONFILE",
+                    help="Amazon Transcribe JSON file")
+    args = parser.parse_args()
+
+    filename=args.JSONFILE
+
+    if (args.space):
+        between_words=" "
+    else:
+        between_words=""
+
+    print ("Input Filename: ", filename)
+    print ("Onput Filename: ", filename+'.srt')
+
+    with codecs.open(filename+'.srt', 'w', 'utf-8') as w:
+        with codecs.open(filename, 'r', 'utf-8') as f:
+            data=json.loads(f.read())
+            output=process(data["results"]['items'], between_words)
+            w.write(output)
 
 if __name__ == '__main__':
-	main()
+    main()
