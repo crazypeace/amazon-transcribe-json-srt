@@ -1,9 +1,25 @@
 # 将Amazon Transcribe生成的json格式转换为srt格式
 
-代码从这里抄的
+## 使用方法
+```
+usage: amazon-transcribe-json2srt.py [-h] [--space] JSONFILE
+
+convert Amazon Transcribe JSON file to SRT subtitle file.
+
+positional arguments:
+  JSONFILE    Amazon Transcribe JSON file
+
+optional arguments:
+  -h, --help  show this help message and exit
+  --space     space between words
+```
+英文要加--space参数，中文不要加，会生成一个JSONFILE.srt的文件。
+
+## 说明
+核心代码从这里抄的
 https://aws.amazon.com/cn/blogs/china/adding-chinese-subtitle-with-amazon-transcribe/
 
-转换过程简单粗暴，没有人性地分句。
+转换过程简单粗暴，4秒合并为一段，没有人性地分句。上一句话末尾的标点都有可能放在一段字幕的开头。
 
 例如：
 
