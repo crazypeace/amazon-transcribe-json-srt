@@ -2,15 +2,12 @@
 
 ## 使用方法
 ```
-usage: amazon-transcribe-json2srt.py [-h] [--space] JSONFILE
-
-convert Amazon Transcribe JSON file to SRT subtitle file.
+python amazon-transcribe-json2srt.py [--space] JSONFILE
 
 positional arguments:
   JSONFILE    Amazon Transcribe JSON file
 
 optional arguments:
-  -h, --help  show this help message and exit
   --space     space between words
 ```
 英文要加--space参数，中文不要加，会生成一个JSONFILE.srt的文件。
